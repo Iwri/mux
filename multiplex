@@ -1,0 +1,22 @@
+entity multiplexador is
+port(A, B : in bit_vector(3 DOWNTO 0);
+	C : in bit;
+	S : out bit_vector(3 DOWNTO 0);
+end multiplexador;
+
+architecture behav of multiplexador is
+	signal W1: bit_vector(3 DOWNTO 0); -- Linha que recebe a saída da porta and superior
+	signal W2: bit_vector(3 DOWNTO 0); -- Linha que recebe a saída da porta and inferior
+	component PortaAnd is
+	 port(en1,en2 : in bit_vector(3 DOWNTO 0);
+		saida_and : out bit_vector(3 DOWNTO 0);
+	end component;
+	component PortaOR is
+	 port(input1, input2 : in bit_vector(3 DOWNTO 0);
+		saida_or : out bit_vector(3 DOWNTO 0);
+		
+	end component;
+begin
+	u1 : PortaAnd port map(en1 => A, en2 => NOT(C), saida_and => W1);
+	u2 : PortaAnd port map(en1 => B, en2 => C, saida_and => W2);
+	u3 : PortaOR port map(input1 => W1, input2 => W2, saida_or => S);
